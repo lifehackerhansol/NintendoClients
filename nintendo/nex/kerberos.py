@@ -11,7 +11,7 @@ class KerberosEncryption:
 	def check_hmac(self, buffer):
 		data = buffer[:-0x10]
 		checksum = buffer[-0x10:]
-		mac = hmac.HMAC(self.key, data)
+		mac = hmac.HMAC(self.key, data, digestmod="md5")
 		return checksum == mac.digest()
 		
 	def decrypt(self, buffer):
@@ -21,7 +21,7 @@ class KerberosEncryption:
 		
 	def encrypt(self, buffer):
 		encrypted = self.rc4.crypt(buffer)
-		mac = hmac.HMAC(self.key, encrypted)
+		mac = hmac.HMAC(self.key, encrypted, digestmod="md5")
 		return encrypted + mac.digest()
 
 

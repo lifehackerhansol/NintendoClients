@@ -142,7 +142,7 @@ class PRUDPMessageV0:
 			data = self.client.secure_key + struct.pack("<HB", packet.packet_id, packet.fragment_id) + data
 
 		if data:
-			return hmac.HMAC(self.client.signature_key, data).digest()[:4]
+			return hmac.HMAC(self.client.signature_key, data, digestmod="md5").digest()[:4]
 		return struct.pack("<I", 0x12345678)
 		
 	def calc_packet_signature(self, packet, signature):
