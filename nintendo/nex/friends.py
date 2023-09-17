@@ -226,25 +226,25 @@ common.DataHolder.register(FriendPresence, "FriendPresence")
 class FriendRelationship(common.Data):
 	def __init__(self):
 		super().__init__()
-		self.unk1 = None
-		self.unk2 = None
-		self.unk3 = None
+		self.principal_id = None
+		self.friend_code = None
+		self.is_complete = None
 	
 	def check_required(self, settings, version):
-		for field in ['unk1', 'unk2', 'unk3']:
+		for field in ['principal_id', 'friend_code', 'is_complete']:
 			if getattr(self, field) is None:
 				raise ValueError("No value assigned to required field: %s" %field)
 	
 	def load(self, stream, version):
-		self.unk1 = stream.u32()
-		self.unk2 = stream.u64()
-		self.unk3 = stream.u8()
+		self.principal_id = stream.u32()
+		self.friend_code = stream.u64()
+		self.is_complete = stream.u8()
 	
 	def save(self, stream, version):
 		self.check_required(stream.settings, version)
-		stream.u32(self.unk1)
-		stream.u64(self.unk2)
-		stream.u8(self.unk3)
+		stream.u32(self.principal_id)
+		stream.u64(self.friend_code)
+		stream.u8(self.is_complete)
 common.DataHolder.register(FriendRelationship, "FriendRelationship")
 
 
