@@ -1021,11 +1021,11 @@ class FriendsClientV1(FriendsProtocolV1):
 		logger.info("FriendsClientV1.get_principal_id_by_local_friend_code -> done")
 		return friend_relationships
 	
-	async def get_friend_relationships(self, unk):
+	async def get_friend_relationships(self, pid_list):
 		logger.info("FriendsClientV1.get_friend_relationships()")
 		#--- request ---
 		stream = streams.StreamOut(self.settings)
-		stream.list(unk, stream.u32)
+		stream.list(pid_list, stream.u32)
 		data = await self.client.request(self.PROTOCOL_ID, self.METHOD_GET_FRIEND_RELATIONSHIPS, stream.get())
 		
 		#--- response ---
@@ -1036,11 +1036,11 @@ class FriendsClientV1(FriendsProtocolV1):
 		logger.info("FriendsClientV1.get_friend_relationships -> done")
 		return friend_relationships
 	
-	async def add_friend_by_principal_id(self, unk, pid):
+	async def add_friend_by_principal_id(self, friend_seed, pid):
 		logger.info("FriendsClientV1.add_friend_by_principal_id()")
 		#--- request ---
 		stream = streams.StreamOut(self.settings)
-		stream.u64(unk)
+		stream.u64(friend_seed)
 		stream.pid(pid)
 		data = await self.client.request(self.PROTOCOL_ID, self.METHOD_ADD_FRIEND_BY_PRINCIPAL_ID, stream.get())
 		
@@ -1121,13 +1121,13 @@ class FriendsClientV1(FriendsProtocolV1):
 			raise ValueError("Response is bigger than expected (got %i bytes, but only %i were read)" %(stream.size(), stream.tell()))
 		logger.info("FriendsClientV1.update_black_list -> done")
 	
-	async def sync_friend(self, unk1, unk2, unk3):
+	async def sync_friend(self, friend_seed, principal_ids, unk):
 		logger.info("FriendsClientV1.sync_friend()")
 		#--- request ---
 		stream = streams.StreamOut(self.settings)
-		stream.u64(unk1)
-		stream.list(unk2, stream.u32)
-		stream.list(unk3, stream.u64)
+		stream.u64(friend_seed)
+		stream.list(principal_ids, stream.u32)
+		stream.list(unk, stream.u64)  # this is always empty
 		data = await self.client.request(self.PROTOCOL_ID, self.METHOD_SYNC_FRIEND, stream.get())
 		
 		#--- response ---
@@ -1192,11 +1192,11 @@ class FriendsClientV1(FriendsProtocolV1):
 			raise ValueError("Response is bigger than expected (got %i bytes, but only %i were read)" %(stream.size(), stream.tell()))
 		logger.info("FriendsClientV1.update_picture -> done")
 	
-	async def get_friend_presence(self, unk):
+	async def get_friend_presence(self, principal_ids):
 		logger.info("FriendsClientV1.get_friend_presence()")
 		#--- request ---
 		stream = streams.StreamOut(self.settings)
-		stream.list(unk, stream.u32)
+		stream.list(principal_ids, stream.u32)
 		data = await self.client.request(self.PROTOCOL_ID, self.METHOD_GET_FRIEND_PRESENCE, stream.get())
 		
 		#--- response ---
@@ -1222,11 +1222,11 @@ class FriendsClientV1(FriendsProtocolV1):
 		logger.info("FriendsClientV1.get_friend_comment -> done")
 		return comments
 	
-	async def get_friend_picture(self, unk):
+	async def get_friend_picture(self, principal_ids):
 		logger.info("FriendsClientV1.get_friend_picture()")
 		#--- request ---
 		stream = streams.StreamOut(self.settings)
-		stream.list(unk, stream.u32)
+		stream.list(principal_ids, stream.u32)
 		data = await self.client.request(self.PROTOCOL_ID, self.METHOD_GET_FRIEND_PICTURE, stream.get())
 		
 		#--- response ---
@@ -1237,11 +1237,11 @@ class FriendsClientV1(FriendsProtocolV1):
 		logger.info("FriendsClientV1.get_friend_picture -> done")
 		return friend_pictures
 	
-	async def get_friend_persistent_info(self, unk):
+	async def get_friend_persistent_info(self, principal_ids):
 		logger.info("FriendsClientV1.get_friend_persistent_info()")
 		#--- request ---
 		stream = streams.StreamOut(self.settings)
-		stream.list(unk, stream.u32)
+		stream.list(principal_ids, stream.u32)
 		data = await self.client.request(self.PROTOCOL_ID, self.METHOD_GET_FRIEND_PERSISTENT_INFO, stream.get())
 		
 		#--- response ---
